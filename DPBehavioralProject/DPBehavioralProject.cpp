@@ -120,26 +120,102 @@
 //    tester->Send("Program ready and testing");
 //}
 
-#include "Observer.h"
+//#include "Observer.h"
+//void ObserverExample()
+//{
+//    srand(time(nullptr));
+//
+//    Market* market = new Market();
+//    Bank* bank = new Bank("Sber", market);
+//    Broker* broker = new Broker("Jhon Smith", market);
+//    market->AddObserver(bank);
+//    market->AddObserver(broker);
+//
+//    market->Bidding();
+//    std::cout << "\n";
+//
+//    market->Bidding();
+//    std::cout << "\n";
+//
+//    broker->StopMarket();
+//
+//    market->Bidding();
+//    std::cout << "\n";
+//}
+
+//#include "Command.h"
+//void CommandExample()
+//{
+//    Television* tv = new Television();
+//
+//    Controller* pult = new Controller(
+//        new TvOnCommand(tv),
+//        new TvSoundUpCommand(tv),
+//        new TvSoundDownCommand(tv)
+//    );
+//
+//    MobileController* app = new MobileController(
+//        new TvOnCommand(tv),
+//        new TvOffCommand(tv),
+//        new TvSoundUpCommand(tv),
+//        new TvSoundDownCommand(tv)
+//    );
+//
+//    pult->ButtonPower();
+//    pult->ButtonVolumePlus();
+//    app->MenuItemVolumePlus();
+//    pult->ButtonVolumePlus();
+//
+//    app->MenuItemUndo();
+//    app->MenuItemUndo();
+//}
+
+//#include "TemplateMethod.h"
+//void TemplateMethodExample()
+//{
+//    Education* education = new School();
+//    education->TemplateMethod();
+//    std::cout << "\n";
+//
+//    delete education;
+//    education = new Universitet();
+//    education->TemplateMethod();
+//    std::cout << "\n";
+//}
+
+#include "Interpreter.h"
 
 int main()
 {
-    srand(time(nullptr));
+    Context* context = new Context();
+    context->SetVariable("a", 10);
+    context->SetVariable("b", 20);
+    context->SetVariable("c", 30);
 
-    Market* market = new Market();
-    Bank* bank = new Bank("Sber", market);
-    Broker* broker = new Broker("Jhon Smith", market);
-    market->AddObserver(bank);
-    market->AddObserver(broker);
+    IExpression* expression1 = new AddExpression(
+        new NumberExpression("a"),
+        new MultExpression(
+            new NumberExpression("b"),
+            new NumberExpression("c")
+        )
+    );
 
-    market->Bidding();
-    std::cout << "\n";
+    double result = expression1->Solve(context);
+    std::cout << result << "\n";
 
-    market->Bidding();
-    std::cout << "\n";
+    context->SetVariable("a", 50);
+    result = expression1->Solve(context);
+    std::cout << result << "\n";
 
-    broker->StopMarket();
 
-    market->Bidding();
-    std::cout << "\n";
+    IExpression* expression2 = new MultExpression(
+        new AddExpression(
+            new NumberExpression("a"),
+            new NumberExpression("b")
+        ),
+        new NumberExpression("c")
+    );
+
+    result = expression2->Solve(context);
+    std::cout << result << "\n";
 }
